@@ -1,0 +1,86 @@
+#!/bin/bash
+
+########
+let m=1        
+let n=1
+########
+#INSTRUCTIONS AND INPUT 
+#############################################################################################################################
+echo -e "\n To use the program correctly, please take into account the following instructions:"
+echo -e "\n Currently, the program feature the following Hypergeometric functions:"
+echo -e "\n Associated Laguerre polynomials----> laguerre"
+echo -e "\n Associated Legendre polynomials----> legendre \n"
+echo -e "\n Spherical harmonics-----> harmonics \n"
+echo -e "\n Quantum state of the Hydrogen Atom--->hydrogen \n"
+read -p "Then, write the keyword associated with the hypergeometric function you want to calculate: " Name
+#############################################################################################################################
+
+#VERIFICATION OF INPUT AND CONSTRUCCTION OF LIBRARY V.hh
+#############################################################################################################################
+
+
+if  [ "$Name" == "hydrogen" ];then
+    echo -e "#define name \"$Name\"" > V.hh
+    read -p "Enter the value of n: " n
+    echo -e "#define MEX \"$n\"" >> V.hh
+    let nn=$n-1
+    echo -e "The values that l can take range from 0 to $nn"
+    read -p "Enter the value of l: " l   
+    echo -e "#define MAX \"$l\"" >> V.hh
+    read -p "Enter the value of m: " m
+    let mm=(-1)*$m
+    echo -e "#define MIX \"$m\"" >> V.hh
+    echo -e "#define MIXXX \"$mm\"" >> V.hh
+    
+    if [[ $l < $n ]] && [[ $n =~ ^[+]?[0-9]+$ ]] && [[ $m =~ ^[+-]?[0-$l]+$ ]] || [[ $l == 0 ]] || [[ $m = 0 ]];then
+	echo -e "\n The quantum states of the Hydrogen Atom are:\n"
+	form -f k #RUN THE CORE
+    else
+	echo "The data to calculate the polynomials is not acceptable. Please remember to follow the instructions at the beginning of the program."
+	exit
+    fi
+
+else
+    
+    if  [ "$Name" == "legendre" ] ||  [ "$Name" == "harmonics" ];then
+	echo -e "#define MEX \"1\"" > V.hh    
+	read -p "Enter the value of l: " l
+	echo -e "#define MAX \"$l\"" >> V.hh
+	read -p "Enter the value of m: " m
+	let mm=(-1)*$m
+	echo -e "#define MIX \"$m\"" >> V.hh
+	echo -e "#define MIXXX \"$mm\"" >> V.hh
+    
+    else
+	if  [ "$Name" == "laguerre" ];then
+	    echo -e "#define MEX \"1\"" > V.hh
+	    echo -e "#define MIX \"1\"" >> V.hh
+	    echo -e "#define MIXXX \"-1\"" >> V.hh	
+	    read -p "Enter the value of l: " l
+	    echo -e "#define MAX \"$l\"" >> V.hh
+	else
+	    echo "The data to calculate the polynomials is not acceptable. Please remember to follow the instructions at the beginning of the program."
+	fi
+    fi       
+    
+    if  [[ $l =~ ^[+]?[0-9]+$ ]] && [[ $n =~ ^[+]?[1-9]+$ ]] && [[ $m =~ ^[+-]?[0-$l]+$ ]] || [[ $l == 0 ]] || [[ $m = 0 ]];then
+	echo -e "#define name \"$Name\"" >> V.hh
+	echo -e "\n The value of the Hypergeometric fuctions for $Name at the position $l is:\n"
+	form -f k #RUN THE CORE
+    else
+	echo "The data to calculate the polynomials is not acceptable. Please remember to follow the instructions at the beginning of the progr\
+am."
+    fi
+fi
+#############################################################################################################################                   
+  
+
+
+
+
+
+
+
+
+
+    
